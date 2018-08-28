@@ -1,102 +1,66 @@
 <template>
-<div id="game" ref="game"></div>
+<div>
+    <transition name="fade">
+    <header class="header" v-show="!scrollTop">
+        <span>Welcome to Necroogre's Blog</span>
+        <img src="../assets/faQ.gif" alt="">
+    </header>
+    </transition>
+    <div class="content" ref="content">
+
+    </div>
+</div>
+
 </template>
 
 <script>
-import createGame from "voxel-engine";
-import voxel from "voxel";
-import highlight from "voxel-highlight";
-import player from "voxel-player";
-import extend from "extend";
-import fly from "voxel-fly";
-import walk from "voxel-walk";
 export default {
   name: "home",
   data() {
-    return {};
+    return {
+      scrollTop: false
+    };
   },
   mounted() {
-    var game = createGame({
-      generate: voxel.generator["Valley"],
-      //   generate: function(x, y, z) {
-      //     return x * x + y * y + z * z <= 15 * 15 ? 1 : 0; // sphere world
-      //   },
-      chunkDistance: 2,
-      texturePath: "./static/textures/",
-      materials: [["grass", "dirt"]],
-      materialFlatColor: false,
-      chunkSize: 32,
-      chunkDistance: 2,
-      worldOrigin: [0, 0, 0],
-      controls: { discreteFire: false },
-      lightsDisabled: false,
-      fogDisabled: false,
-      generateChunks: true,
-      mesher: voxel.meshers.culled,
-      playerHeight: 1.62
-    });
-    window.game = game; // for debugging
-    game.appendTo(this.$refs.game);
-    game.createBlock({ x: 2, y: 5, z: 14 }, 1);
-    var createPlayer = player(game);
-
-    var avatar = createPlayer("./static/textures/player.png");
-    avatar.possess();
-    avatar.yaw.position.set(2, 14, 4);
-
-    this.setup(game, avatar);
-  },
-  methods: {
-    setup(game, avatar) {
-      var makeFly = fly(game);
-      var target = game.controls.target();
-      game.flyer = makeFly(target);
-
-      // highlight blocks when you look at them, hold <Ctrl> for block placement
-      var blockPosPlace, blockPosErase;
-      var hl = (game.highlighter = highlight(game, { color: 0xff0000 }));
-      hl.on("highlight", function(voxelPos) {
-        blockPosErase = voxelPos;
-      });
-      hl.on("remove", function(voxelPos) {
-        blockPosErase = null;
-      });
-      hl.on("highlight-adjacent", function(voxelPos) {
-        blockPosPlace = voxelPos;
-      });
-      hl.on("remove-adjacent", function(voxelPos) {
-        blockPosPlace = null;
-      });
-
-      // toggle between first and third person modes
-      window.addEventListener("keydown", function(ev) {
-        if (ev.keyCode === "R".charCodeAt(0)) avatar.toggle();
-      });
-
-      // block interaction stuff, uses highlight data
-      var currentMaterial = 1;
-
-      game.on("fire", function(target, state) {
-        var position = blockPosPlace;
-        if (position) {
-          game.createBlock(position, currentMaterial);
+    let pageYOffset = 0;
+    window.addEventListener(
+      "scroll",
+      e => {
+        if (pageYOffset < window.pageYOffset) {
+          this.scrollTop = true;
         } else {
-          position = blockPosErase;
-          if (position) game.setBlock(position, 0);
+          this.scrollTop = false;
         }
-      });
-
-      game.on("tick", function() {
-        walk.render(target.playerSkin);
-        var vx = Math.abs(target.velocity.x);
-        var vz = Math.abs(target.velocity.z);
-        if (vx > 0.001 || vz > 0.001) walk.stopWalking();
-        else walk.startWalking();
-      });
-    }
+        pageYOffset = window.pageYOffset;
+      },
+      true
+    );
   }
 };
 </script>
 
-<style>
+<style scoped>
+.header {
+  display: flex;
+  position: fixed;
+  width: 100%;
+  background: greenyellow;
+  justify-content: center;
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+  align-items:center;
+}
+.header img {
+  height: 40px;
+}
+.content {
+  height: 150vh;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
 </style>

@@ -2,12 +2,11 @@
 <div>
     <transition name="fade">
     <header class="header" v-show="!scrollTop">
-        <span>Welcome to Necroogre's Blog</span>
-        <img src="../assets/faQ.gif" alt="">
+        <span>Necroogre's World</span>
     </header>
     </transition>
     <div class="content" ref="content">
-
+        <img src="../assets/faQ.gif" alt="">
     </div>
 </div>
 
@@ -48,12 +47,11 @@ export default {
   justify-content: center;
   box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2);
   align-items:center;
-}
-.header img {
   height: 40px;
 }
 .content {
-  height: 150vh;
+  padding-top: 50px;
+  text-align: center;
 }
 .fade-enter-active,
 .fade-leave-active {

@@ -1,8 +1,8 @@
 <template>
 <div>
     <transition name="fade">
-    <header class="header" v-show="!scrollTop">
-        <span>Necroogre</span>
+    <header class="header" v-show="showHeader" ref="header">
+        <h3>Necroogre</h3>
     </header>
     </transition>
         <div class="navi">
@@ -34,7 +34,7 @@ export default {
   name: "home",
   data() {
     return {
-      scrollTop: false,
+      showHeader: false,
       routes: [
         {
           image: cloud,
@@ -69,11 +69,16 @@ export default {
     window.addEventListener(
       "scroll",
       e => {
-        if (pageYOffset < window.pageYOffset) {
-          this.scrollTop = true;
+        if (window.pageYOffset < this.$refs.header.clientHeight) {
+          this.showHeader = true;
         } else {
-          this.scrollTop = false;
+          if (pageYOffset < window.pageYOffset) {
+            this.showHeader = false;
+          } else {
+            this.showHeader = true;
+          }
         }
+
         pageYOffset = window.pageYOffset;
       },
       true
@@ -93,6 +98,7 @@ export default {
   box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2);
   align-items: center;
   height: 40px;
+  font-family: "Helvetica";
 }
 .navi {
   position: fixed;

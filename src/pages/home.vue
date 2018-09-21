@@ -1,11 +1,12 @@
 <template>
 <div>
-    <transition name="fade">
+    <transition name="slide-top">
     <header class="header" v-show="showHeader" ref="header">
         <h3>Necroogre</h3>
     </header>
     </transition>
-        <div class="navi">
+    <transition name="slide-left">
+        <div class="navi" v-show="showHeader">
           <ul>
             <li v-for="(item,index) in routes" :key="index">
               <router-link :to="item.path">
@@ -14,7 +15,8 @@
             </li>
           </ul>
         </div>
-    <div class="wrapper">
+    </transition>
+    <div class="wrapper" v-bind:class="{ active : !showHeader }">
         <div class="content">
           <router-view></router-view>
         <!-- <img src="../assets/faQ.gif" alt=""> -->
@@ -34,7 +36,7 @@ export default {
   name: "home",
   data() {
     return {
-      showHeader: false,
+      showHeader: true,
       routes: [
         {
           image: cloud,
@@ -88,6 +90,36 @@ export default {
 </script>
 
 <style scoped lang="less">
+.slide-top-enter-active {
+  animation: slide-top 0.3s;
+}
+.slide-top-leave-active {
+  animation: slide-top 0.3s reverse;
+}
+@keyframes slide-top {
+  0% {
+    transform: translateY(-40px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.slide-left-enter-active {
+  animation: slide-left 0.3s;
+}
+.slide-left-leave-active {
+  animation: slide-left 0.3s reverse;
+}
+@keyframes slide-left {
+  0% {
+    transform: translateX(-40px);
+  }
+  100% {
+    transform: translateX(0px);
+  }
+}
+
 .header {
   display: flex;
   position: fixed;
@@ -99,6 +131,7 @@ export default {
   align-items: center;
   height: 40px;
   font-family: "Helvetica";
+  z-index: 999;
 }
 .navi {
   position: fixed;
@@ -143,5 +176,8 @@ export default {
     border-bottom-left-radius: 5px;
     padding: 5px;
   }
+}
+.active{
+  margin-left: 10px;
 }
 </style>

@@ -1,5 +1,7 @@
 <template>
-    <div>啊哈哈哈2</div>
+    <div>
+        <img src="../assets/faQ.gif" alt="">
+    </div>
 </template>
 <script>
 export default {

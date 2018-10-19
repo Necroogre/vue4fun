@@ -1,5 +1,7 @@
 <template>
-    <div>啊哈哈哈3</div>
+    <div>
+      <img src="../assets/rem.jpg" alt="">
+    </div>
 </template>
 <script>
 export default {

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <img src="../assets/faQ.gif" alt="">
+        <img src="../assets/megumi.jpg" alt="">
     </div>
 </template>
 <script>

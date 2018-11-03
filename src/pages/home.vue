@@ -1,12 +1,10 @@
 <template>
 <div>
-    <transition name="slide-top">
-    <header class="header" v-show="showHeader" ref="header">
+    <header class="header" v-bind:style="{transform:'translateY('+transformY+'px)'}" ref="header">
         <h3>Necroogre</h3>
     </header>
-    </transition>
     <transition name="slide-left">
-        <div class="navi" v-show="showHeader">
+        <div class="navi" v-bind:style="{transform:'translateX('+transformX+'px)'}">
           <ul>
             <li v-for="(item,index) in routes" :key="index">
               <router-link :to="item.path">
@@ -16,7 +14,7 @@
           </ul>
         </div>
     </transition>
-    <div class="wrapper" v-bind:class="{ active : !showHeader }">
+    <div class="wrapper" v-bind:style="{transform:'translateX('+transformX+'px)'}">
         <div class="content">
           <router-view></router-view>
         <!-- <img src="../assets/faQ.gif" alt=""> -->
@@ -63,23 +61,39 @@ export default {
           name: "",
           path: "/page5"
         }
-      ]
+      ],
+      transformY: 0,
+      transformX: 0
     };
   },
   mounted() {
     let pageYOffset = 0;
+    let vm = this;
+    let distancePerFrame = 5;
     window.addEventListener(
       "scroll",
       e => {
-        if (window.pageYOffset < this.$refs.header.clientHeight) {
-          this.showHeader = true;
+        console.log(pageYOffset, window.pageYOffset, vm.transformY);
+        if (pageYOffset < window.pageYOffset) {
+          if (vm.transformY > -40) {
+            vm.transformY = vm.transformY - distancePerFrame;
+            vm.transformX = vm.transformX - distancePerFrame;
+          }
         } else {
-          if (pageYOffset < window.pageYOffset) {
-            this.showHeader = false;
-          } else {
-            this.showHeader = true;
+          if (vm.transformY < 0) {
+            vm.transformY = vm.transformY + distancePerFrame;
+            vm.transformX = vm.transformX + distancePerFrame;
           }
         }
+        // if (window.pageYOffset < this.$refs.header.clientHeight) {
+        //   this.showHeader = true;
+        // } else {
+        //   if (pageYOffset < window.pageYOffset) {
+        //     this.showHeader = false;
+        //   } else {
+        //     this.showHeader = true;
+        //   }
+        // }
 
         pageYOffset = window.pageYOffset;
       },
@@ -166,7 +180,8 @@ export default {
 }
 .wrapper {
   padding-top: 50px;
-  margin-left: 60px;
+  left: 60px;
+  position: relative;
   .content {
     -moz-box-shadow: 0px 0px 5px #333333;
     -webkit-box-shadow: 0px 0px 5px #333333;
@@ -177,7 +192,7 @@ export default {
     padding: 5px;
   }
 }
-.active{
+.active {
   margin-left: 10px;
 }
 </style>
